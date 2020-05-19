@@ -11,7 +11,7 @@ class FileDialog(QFileDialog):
 
     def open_image(self):
         img_path, img_type = QFileDialog.getOpenFileName(self.parent(), self.title, os.getcwd(),
-                                                         "Image Files(*.jpg *.jpeg *.png")
+                                                         "Image Files(*.bmp;*.jpg;*.jpeg;*.png")
         if img_path != '':
             self.fileSelected.emit(img_path)
         print(img_path, img_type)
