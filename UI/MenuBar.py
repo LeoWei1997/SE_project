@@ -116,8 +116,8 @@ class MenuBar(QWidget):
         # self.redo_btn.setStyleSheet("MenuButton:hover{background-color: #fff}")
         self.redo_btn.setShortcut("Ctrl+Y")
         self.redo_btn.clicked.connect(self.parent().image_window.redo)
-        self.undo_btn.clicked.connect(self.toggle_btn())  # 更新按钮状态
-        self.redo_btn.clicked.connect(self.toggle_btn())
+        self.undo_btn.clicked.connect(self.toggle_btn)  # 更新按钮状态
+        self.redo_btn.clicked.connect(self.toggle_btn)
 
     def draw_right_layout(self, r_layout):
         r_layout.setSpacing(0)
@@ -132,7 +132,7 @@ class MenuBar(QWidget):
         self.save_other_btn = MenuButton(QIcon("./resource/save_other_icon.png"), "另存为", self)
         self.save_other_btn.setObjectName("save_other_btn")
         r_layout.addWidget(self.save_other_btn)
-        self.save_other_btn.clicked.connect(self.parent().image_window.save_other)
+        self.save_other_btn.clicked.connect(self.parent().file_dialog.save_image)
 
     def on_window_resize(self, w, h):
         self.setFixedWidth(w)

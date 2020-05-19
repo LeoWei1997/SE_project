@@ -26,13 +26,6 @@ class RightWindow(QWidget):
     def draw_right_window(self):
         self.layout.setSpacing(1)
         self.layout.setContentsMargins(0, 0, 0, 0)
-        # self.setStyleSheet("*{background-color: #f2f2f2;} QLabel{  \
-        #                                         padding-top: 10px;    \
-        #                                         padding-left: 22px;  \
-        #                                         padding-bottom: 10px;\
-        #                                         font-size: 16px;     \
-        #                                         color: #6c6c6c;      \
-        #                                     }")
         self.setLayout(self.layout)
         self.draw_title(self.layout)
         self.draw_content(self.layout)
@@ -61,14 +54,11 @@ class RightWindow(QWidget):
             grid.addWidget(style_btn, row + 1, col)
         style_box.setLayout(grid)
 
-        # 加入滚动条
+        # 如果内置风格太多,可以加入滚动条
         # scroll = QScrollArea()
         # scroll.setWidget(style_box)
         # layout.addWidget(scroll)
-
         layout.addWidget(style_box)
-
-
 
         face_swap = QLabel("人脸识别", self)
         face_swap.setObjectName("face_label")
@@ -79,10 +69,14 @@ class RightWindow(QWidget):
         object_detc.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         layout.addWidget(object_detc)
 
-    def make_calluser(self, style):
+    def make_calluser(self, style: str):
+        image, descp = self.parent().image_window.history_ctrl.current()
         def calluser():
             print(style)
-            # set style here......
+            # send style and image to server -----------------
+            # 同时挂起,等待结果回传
+            pass
+
         return calluser
 
     def on_window_resize(self, w, h):

@@ -11,8 +11,8 @@ from UI.qss.QSSReader import QSSReader
 
 
 class MainWindow(QMainWindow):
-    __width = 1400
-    __height = 950
+    __width = 1300
+    __height = 900
     __min_width = 480
     __min_height = 600
     __window_title = "图骗"

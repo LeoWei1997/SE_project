@@ -10,7 +10,7 @@ RightWindow *{
 background-color: #f2f2f2;
 }
 RightWindow QLabel#edit_label{padding: 20px;font-size: 24px;width: 300px;height: 50px}
-RightWindow QLabel#style_label, #face_label, #object_label{
+RightWindow QLabel#style_label,#face_label,#object_label{
     padding: 10px;
     text-align: right;
     font-size: 18px;
