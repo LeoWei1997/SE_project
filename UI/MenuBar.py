@@ -132,7 +132,7 @@ class MenuBar(QWidget):
         self.save_other_btn = MenuButton(QIcon("./resource/save_other_icon.png"), "另存为", self)
         self.save_other_btn.setObjectName("save_other_btn")
         r_layout.addWidget(self.save_other_btn)
-        self.save_other_btn.clicked.connect(self.parent().file_dialog.save_image)
+        self.save_other_btn.clicked.connect(self.parent().image_window.save_other)
 
     def on_window_resize(self, w, h):
         self.setFixedWidth(w)

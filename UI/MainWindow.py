@@ -88,10 +88,10 @@ class MainWindow(QMainWindow):
     def imageEditEvent(self):
         self.saved = False
 
-    def imageSaveEvent(self):
+    def imageSaveEvent(self, img_path):
         self.saved = True
+        if type(img_path) == type("str"):
+            self.update_open_image(img_path)
 
-    def openFilterEvent(self, action: int):
-        pass
 
 

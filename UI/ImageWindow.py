@@ -3,7 +3,9 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QSizePolicy, QVBoxLayout, QHBo
 from PyQt5.QtGui import QPixmap, QImage, QMouseEvent
 from UI.HistoryControl import HistoryControl
 import cv2
+import os
 from PIL import Image, ImageQt
+from ObjectDetect import ObjectDetector, Word2Cloud
 import ImageTools
 '''
 此控件包含一个主imagewindow和一个副imagewindow,当风格化时开启副窗
@@ -24,6 +26,8 @@ class ImageWindow(QWidget):
     pixmap_style: QPixmap
     crop_start: tuple
     crop_end: tuple
+
+    object_detector = None
 
     def __init__(self, parent):
         super(QWidget, self).__init__(parent)
@@ -83,20 +87,33 @@ class ImageWindow(QWidget):
 
 
     def save_image(self):
-        question_result = QMessageBox.question(self, "当前编辑图像会覆盖原图", "是否覆盖？",
-                                               QMessageBox.StandardButtons(QMessageBox.Yes|QMessageBox.No|QMessageBox.Cancel))
-        if question_result == QMessageBox.Yes:
-            img, descp = self.history_ctrl.current()
-            img.save(self.img_path, quality=95)
-            self.parent().imageSaveEvent()
-
-    def save_other(self, des_path):
         img, descp = self.history_ctrl.current()
+        if img == False:
+            return
+        if self.img_path != "":
+            question_result = QMessageBox.question(self, "当前编辑图像会覆盖原图", "是否覆盖？",
+                                                   QMessageBox.StandardButtons(
+                                                       QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel))
+            if question_result == QMessageBox.Yes:
+                img, descp = self.history_ctrl.current()
+                img.save(self.img_path, quality=95)
+                self.parent().imageSaveEvent(self.img_path)
+        else:
+            self.save_other()
+
+    def save_other(self):
+        img, descp = self.history_ctrl.current()
+        if img == False:
+            return
+        des_path = self.parent().file_dialog.save_image()
+        if des_path == "" or type(des_path) != type("str"):
+            return
+        self.img_path = des_path
         img.save(des_path, quality=95)
-        self.parent().imageSaveEvent()
+        self.parent().imageSaveEvent(self.img_path)
 
     def zoom_in(self):
-        if not self.img_path:
+        if self.img_path == "":
             return
         self.img_size_status += 1
         img = self.pixmap_original
@@ -107,7 +124,7 @@ class ImageWindow(QWidget):
         self.img_original.setPixmap(img)
 
     def zoom_out(self):
-        if not self.img_path:
+        if self.img_path == "":
             return
         self.img_size_status -= 1
         img = self.pixmap_original
@@ -162,3 +179,33 @@ class ImageWindow(QWidget):
         self.draw_img(img, self.img_original)
         pass
 
+    def style_trans(self, style: str):
+        pass
+
+    def object_detect(self):
+        if self.object_detector == None:
+            self.object_detector = ObjectDetector.Object_Detector()
+        img, descp = self.history_ctrl.current()
+        image, object_list = self.object_detector.object_detc(img)
+        self.update_display(image, "object detect")
+        pass
+
+    def cloud(self, img_paths):
+        if self.object_detector == None:
+            self.object_detector = ObjectDetector.Object_Detector()
+        object_list = []
+        words = ""
+        for path in img_paths:
+            img, objects = self.object_detector.object_detc(Image.open(path))
+            for obj in objects:
+                object_list.append(obj["name"])
+        print(img_paths[0])
+        with open(img_paths[0][:img_paths[0].rfind('\\')]+"objects.txt", 'w') as file:
+            for obj in object_list:
+                file.write(obj + ' ')
+        print("write done")
+        for obj in object_list:
+            words += (obj+' ')
+        img_res = Word2Cloud.word2cloud(words)
+        self.update_display(img_res, "abstract")
+        pass

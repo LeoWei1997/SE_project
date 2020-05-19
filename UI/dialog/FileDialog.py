@@ -17,12 +17,17 @@ class FileDialog(QFileDialog):
         print(img_path, img_type)
 
     def save_image(self):
-        if self.parent().image_window.img_path == '':
-            return
         img_path, img_type = QFileDialog.getSaveFileName(self.parent(), "Save as", os.getcwd(),
                                                            "Images (*.png *.bmp *.jpg  *.gif *.jpeg)",
                                                            options=QFileDialog.ShowDirsOnly
                                                            | QFileDialog.DontResolveSymlinks
                                                            )
+        return img_path
+
+    def get_img_paths(self):
+        img_path = QFileDialog.getExistingDirectory(self.parent(), "Choose directory", os.getcwd())
         if img_path != "":
-            self.parent().image_window.save_other(img_path)
+            print(img_path)
+            img_paths = [x.path for x in os.scandir(img_path) if
+                         (x.name.endswith(".jpg") or x.name.endswith(".png") or x.name.endswith(".jpeg"))]
+            self.parent().image_window.cloud(img_paths)
