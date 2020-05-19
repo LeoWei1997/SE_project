@@ -76,6 +76,7 @@ class ImageWindow(QWidget):
         self.history_ctrl.push(img, descp)
         self.draw_img(img, self.img_original)
         self.parent().menubar.toggle_btn()
+        self.parent().imageEditEvent()
 
     def on_window_resize(self, w, h):
         self.setFixedSize(w - 300, h - 60)
@@ -87,10 +88,12 @@ class ImageWindow(QWidget):
         if question_result == QMessageBox.Yes:
             img, descp = self.history_ctrl.current()
             img.save(self.img_path, quality=95)
+            self.parent().imageSaveEvent()
 
     def save_other(self, des_path):
         img, descp = self.history_ctrl.current()
         img.save(des_path, quality=95)
+        self.parent().imageSaveEvent()
 
     def zoom_in(self):
         if not self.img_path:
