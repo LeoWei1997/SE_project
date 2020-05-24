@@ -6,6 +6,7 @@ import cv2
 import os
 from PIL import Image, ImageQt
 from ObjectDetect import ObjectDetector, Word2Cloud
+from FileTrans import FileTrans
 import ImageTools
 '''
 此控件包含一个主imagewindow和一个副imagewindow,当风格化时开启副窗
@@ -28,6 +29,8 @@ class ImageWindow(QWidget):
     crop_end: tuple
 
     object_detector = None
+    file_trans = FileTrans()
+    address = "204.44.94.195:2333"
 
     def __init__(self, parent):
         super(QWidget, self).__init__(parent)
@@ -76,9 +79,19 @@ class ImageWindow(QWidget):
         self.history_ctrl.clear()  # 新的图片要清空历史
         self.update_display(img, "打开 %s" % self.img_path[self.img_path.rfind('/') + 1:])
 
+    def on_image_close(self):
+        self.img_size_status = 0
+        self.img_path = ''
+        self.history_ctrl.clear()
+        self.update_display(None, '')
+
     def update_display(self, img: Image, descp: None):
-        self.history_ctrl.push(img, descp)
-        self.draw_img(img, self.img_original)
+        if not img:
+            self.parent().update_open_image('')  # move the path in title
+            self.img_original.setPixmap(QPixmap(''))  # move the image
+        else:
+            self.history_ctrl.push(img, descp)
+            self.draw_img(img, self.img_original)
         self.parent().menubar.toggle_btn()
         self.parent().imageEditEvent()
 
@@ -105,7 +118,7 @@ class ImageWindow(QWidget):
         img, descp = self.history_ctrl.current()
         if img == False:
             return
-        des_path = self.parent().file_dialog.save_image()
+        des_path = self.parent().file_dialog.save_other()
         if des_path == "" or type(des_path) != type("str"):
             return
         self.img_path = des_path
@@ -179,13 +192,45 @@ class ImageWindow(QWidget):
         self.draw_img(img, self.img_original)
         pass
 
-    def style_trans(self, style: str):
+    def style_trans(self):
+        sender = self.sender()
+        style = int(sender.objectName())
+        print("style %d" % style)
+        img, descp = self.history_ctrl.current()
+        if img == False:
+            question_result = QMessageBox.question(self, "提示", "请先打开一张图片作为原图!",
+                                                   QMessageBox.Yes)
+            if question_result == QMessageBox.Yes:
+                return
+        img_res = self.file_trans.send_st(self.address, style, img)
+        # self.update_display(img_res, "风格转换:%d" % style)
+        pass
+
+    def face_swap(self):
+        img, descp = self.history_ctrl.current()
+        if img == False:
+            question_result = QMessageBox.question(self, "提示", "请先打开一张含人像的图片作为原图!",
+                                                   QMessageBox.Yes)
+            if question_result == QMessageBox.Yes:
+                return
+        face_path = self.parent().file_dialog.open_face()
+        if face_path == "" or not isinstance(face_path, str):
+            return
+        face = Image.open(face_path)
+        img_res = self.file_trans.send_fs(self.address, img, face)
+        # self.update_display(img_res, "人像换脸")
         pass
 
     def object_detect(self):
         if self.object_detector == None:
             self.object_detector = ObjectDetector.Object_Detector()
         img, descp = self.history_ctrl.current()
+        if img == False:
+            question_result = QMessageBox.question(self, "提示", "请先打开一张图片作为原图!",
+                                                   QMessageBox.Yes)
+            if question_result == QMessageBox.Yes:
+                return
+
         image, object_list = self.object_detector.object_detc(img)
         self.update_display(image, "object detect")
         pass

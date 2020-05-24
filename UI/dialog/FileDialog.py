@@ -16,7 +16,7 @@ class FileDialog(QFileDialog):
             self.fileSelected.emit(img_path)
         print(img_path, img_type)
 
-    def save_image(self):
+    def save_other(self):
         img_path, img_type = QFileDialog.getSaveFileName(self.parent(), "Save as", os.getcwd(),
                                                            "Images (*.png *.bmp *.jpg  *.gif *.jpeg)",
                                                            options=QFileDialog.ShowDirsOnly
@@ -31,3 +31,8 @@ class FileDialog(QFileDialog):
             img_paths = [x.path for x in os.scandir(img_path) if
                          (x.name.endswith(".jpg") or x.name.endswith(".png") or x.name.endswith(".jpeg"))]
             self.parent().image_window.cloud(img_paths)
+
+    def open_face(self):
+        img_path, img_type = QFileDialog.getOpenFileName(self.parent(), "请选择目标人像", os.getcwd(),
+                                                         "Image Files(*.bmp;*.jpg;*.jpeg;*.png")
+        return img_path

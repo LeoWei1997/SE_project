@@ -9,11 +9,11 @@ class MenuButton(QPushButton):
 
 class MenuBar(QWidget):
     __height = 60
-    __min_width = 610
+    __min_width = 670
 
-    # 打开,保存, 放大,缩小,裁剪,撤销,重做,另存为
-    # normal: 130,90,300,90 = 610
-    # min: 480
+    # 打开,保存, 放大,缩小,裁剪,撤销,重做, 另存为,关闭
+    # normal: 130,90,300,90,60 = 670
+    # min: 540
     image_btn: MenuButton
     save_btn: MenuButton
 
@@ -75,7 +75,6 @@ class MenuBar(QWidget):
         self.save_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.save_btn.setShortcut("Ctrl+S")
         self.save_btn.clicked.connect(self.parent().image_window.save_image)
-        self.save_btn.clicked.connect(self.parent().imageSaveEvent)
 
     def draw_middle_layout(self, m_layout):
         m_layout.setSpacing(0)
@@ -133,6 +132,11 @@ class MenuBar(QWidget):
         self.save_other_btn.setObjectName("save_other_btn")
         r_layout.addWidget(self.save_other_btn)
         self.save_other_btn.clicked.connect(self.parent().image_window.save_other)
+
+        self.close_btn = MenuButton(QIcon("./resource/close_icon.png"), '', self)
+        self.close_btn.setObjectName("close_btn")
+        r_layout.addWidget(self.close_btn)
+        self.close_btn.clicked.connect(self.parent().image_window.on_image_close)
 
     def on_window_resize(self, w, h):
         self.setFixedWidth(w)
