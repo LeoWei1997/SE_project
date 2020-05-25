@@ -2,7 +2,6 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QPushButton, QSizePolicy, QHBoxLayout
 
-# 巨坑!!!stylesheet设置无效
 class MenuButton(QPushButton):
     # def init_menubutton(self):
     pass
@@ -65,8 +64,7 @@ class MenuBar(QWidget):
         # # 设置stylesheet无效只好用切换方案的方法
         # self.image_btn.setProperty("color", "1")
         # self.image_btn.style().polish(self.image_btn)
-        print(self.image_btn.styleSheet())
-        #
+        # print(self.image_btn.styleSheet())
 
         # self.image_btn.setEnabled(False)
         self.save_btn = MenuButton(QIcon("./resource/save_icon.png"), "保存", self)
@@ -120,13 +118,6 @@ class MenuBar(QWidget):
 
     def draw_right_layout(self, r_layout):
         r_layout.setSpacing(0)
-
-        # self.edit_btn = MenuButton(QIcon("./resource/edit_icon.png"), "编辑", self)
-        # r_layout.addWidget(self.edit_btn)
-        # self.edit_btn.setStyleSheet("MenuButton{ width: 90px\
-        #                                         }")
-        # self.edit_btn.clicked.connect(self.parent().right_window.toggle)
-        # self.edit_btn.clicked.connect(self.parent().image_window.on_right_window_toggle)
 
         self.save_other_btn = MenuButton(QIcon("./resource/save_other_icon.png"), "另存为", self)
         self.save_other_btn.setObjectName("save_other_btn")

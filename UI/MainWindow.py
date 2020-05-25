@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import QIcon, QFont
-from PyQt5.QtWidgets import QMainWindow, QWidget, QStatusBar, \
+from PyQt5.QtWidgets import QMainWindow, QWidget, \
     QMessageBox, QDesktopWidget, QFileDialog
 
 from UI.ImageWindow import ImageWindow
@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
     __min_width = 480
     __min_height = 600
     __window_title = "图骗"
-    __icon = "resource/QQ.png"
+    __icon = "resource/dingdangmao.png"
     __cur_image = ''
 
     file_dialog: QFileDialog  # 图片打开和储存

@@ -1,9 +1,7 @@
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtWidgets import QWidget, QPushButton, QSizePolicy, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox
-from PyQt5.QtGui import QPixmap, QImage, QMouseEvent
+from PyQt5.QtWidgets import QWidget, QSizePolicy, QHBoxLayout, QLabel, QMessageBox
+from PyQt5.QtGui import QPixmap, QMouseEvent
 from UI.HistoryControl import HistoryControl
-import cv2
-import os
 from PIL import Image, ImageQt
 from ObjectDetect import ObjectDetector, Word2Cloud
 from FileTrans import FileTrans
@@ -241,7 +239,12 @@ class ImageWindow(QWidget):
         object_list = []
         words = ""
         for path in img_paths:
-            img, objects = self.object_detector.object_detc(Image.open(path))
+            print('image', path)
+            img = Image.open(path)
+            if img.mode != 'RGB':
+                print("非RGB图像")
+                img = img.convert('RGB')
+            img, objects = self.object_detector.object_detc(img)
             for obj in objects:
                 object_list.append(obj["name"])
         print(img_paths[0])

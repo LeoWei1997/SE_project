@@ -74,10 +74,10 @@ class RightWindow(QWidget):
             style_btn.setStyleSheet(self.qss)
             style_btn.setFixedSize(70, 70)
             # style_btn.clicked.connect(self.make_calluser(i))  # 自定义的回调函数工厂
-            # print("wtf i is %d" % i)  哎, 从0一直到7,最后停留在7,没法做到多对一映射
+            # print("wtf i is %d" % i)  从0一直到7,最后停留在7,没法做到多对一映射
             # 所以不要用传参法,用self.sender(),利用sender.text()或sender.objectName()识别信号源
-            # style_btn.clicked.connect(lambda: self.parent().image_window.style_trans(i))  # 什么工厂, 用lambda修饰就好了
-            style_btn.clicked.connect(self.parent().image_window.style_trans)  # 什么工厂, 用lambda修饰就好了
+            # style_btn.clicked.connect(lambda: self.parent().image_window.style_trans(i))  # 不用工厂, 用lambda修饰就好了
+            style_btn.clicked.connect(self.parent().image_window.style_trans)
             row, col = divmod(i, 3)  # 三个一行
             grid.addWidget(style_btn, row, col)
         style_box.setLayout(grid)
@@ -145,8 +145,6 @@ class RightWindow(QWidget):
         return calluser
 
     def on_window_resize(self, w, h):
-        # if self.status:
-        #     self.setGeometry(w - self.__width, 60, self.__width, self.__height)
         self.setGeometry(w - self.__width, 60, self.__width, self.parent().height())
 
 
