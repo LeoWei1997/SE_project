@@ -228,7 +228,9 @@ class ImageWindow(QWidget):
                                                    QMessageBox.Yes)
             if question_result == QMessageBox.Yes:
                 return
-
+        if img.mode != 'RGB':
+            print("非RGB图像")
+            img = img.convert('RGB')
         image, object_list = self.object_detector.object_detc(img)
         self.update_display(image, "object detect")
         pass
